@@ -1,0 +1,8 @@
+packages:
+ - yum
+ - git
+ - docker
+ - docker-python
+
+daemon_config: daemon_orig.json.j2
+docker_install_path: /mnt/openshift/docker

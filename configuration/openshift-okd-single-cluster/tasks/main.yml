@@ -1,0 +1,6 @@
+---
+- name: Configure Openshift BootStrap
+  
+  roles:
+    role: vm_common
+    role: openshift_bootstrap

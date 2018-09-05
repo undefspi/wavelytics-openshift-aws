@@ -1,0 +1,19 @@
+---
+- name: determine blk provisioned
+  shell: "lsblk --output NAME,SIZE | grep {{ ebs_volume_size }} | awk '{print $1}'"
+  register: provisioned_block
+
+- name: create filesystem
+  shell: "mkfs -t ext4 /dev/{{ provisioned_block.stdout }}"
+
+- name: debug blk_provision
+  debug: 
+    var: provisioned_block
+
+- name: Mount DVD read-only
+  mount:
+    path: "{{ ebs_mount_point }}"
+    src: "{{ provisioned_block.stdout }}"
+    fstype: ext4
+    opts: ro,noauto
+    state: mounted

@@ -1,0 +1,2 @@
+ebs_volume_size: 20G
+ebs_mount_point: "/mnt/openshift/docker"
