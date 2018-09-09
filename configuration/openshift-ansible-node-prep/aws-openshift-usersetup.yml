@@ -1,0 +1,28 @@
+---
+- hosts: master
+  gather_facts: no
+  become: true
+  
+tasks:
+
+  - name: OC Login
+    shell: oc login -u system:admin
+    register: oc_token
+
+  - name: Create Admin User
+    shell: htpasswd -b /etc/openshift/openshift-passwd admin {{ openshift_admin_user_password }}
+  
+  - name: Apply Administration Role to Admin User
+    shell: oc adm policy add-cluster-role-to-user cluster-admin admin
+
+  - name: Create Developer User
+    shell: htpasswd -b /etc/openshift/openshift-passwd developer {{ openshift_developer_user_password }}
+
+  - name: Create user developer in OC
+    shell: oc create user developer
+
+  - name: Create Identity in OC
+    shell: oc create identity htpasswd_auth:developer
+
+  - name: Map user wth identity
+    shell: oc create useridentitymapping htpasswd_auth:developer developer
