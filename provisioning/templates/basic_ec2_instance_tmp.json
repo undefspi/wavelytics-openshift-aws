@@ -176,7 +176,7 @@
                 "AnsibleInstall" : {
                     "commands" : {
                         "InstallUsingPip" : {
-                            "command" : "pip install ansible",
+                            "command" : "pip install ansible==2.2.2.0",
                             "cwd" : "~"
                         }
                     }
