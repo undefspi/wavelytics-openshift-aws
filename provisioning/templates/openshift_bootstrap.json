@@ -9,7 +9,11 @@
         "Type": "AWS::EC2::KeyPair::KeyName",
         "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
       },
-  
+      "RepoURL" : {
+         "Description" : "The URL of the Repo to Clone down once provisioned (https)",
+         "Type": "String",
+         "Default" : "https://github.com/undefspi/wavelytics-openshift-aws.git"
+      },
       "InstanceType" : {
         "Description" : "WebServer EC2 instance type",
         "Type" : "String",
@@ -171,7 +175,8 @@
         "Metadata" : {
             "AWS::CloudFormation::Init" : {
               "configSets" : {
-                "BootStrapSetup" : [ "AnsibleInstall","UpdateYum","InstallBasePackages" ]
+                "BootStrapSetup" : [ "AnsibleInstall","UpdateYum","InstallBasePackages" ],
+                "CloneOsRepo": [ "CloneRepo" ]
                 },
                 "AnsibleInstall" : {
                     "commands" : {
@@ -195,6 +200,18 @@
                          "git" : []
                       }
                     }
+                },
+                "CloneRepo" : {
+                  "commands" : {
+                    "SetupGitHubDir" : {
+                      "command" : "mkdir Github",
+                      "cwd" : "/"
+                    },
+                    "cloneGit" : {
+                        "command" :  { "Fn::Join" : ["", ["git clone --recurse-submodule ", { "Ref": "RepoURL" }]]},
+                        "cwd" : "/Github"
+                    }
+                  }
                 }
             }  
         },
@@ -211,7 +228,7 @@
                "/opt/aws/bin/cfn-init -v ",
                "         --stack ", { "Ref" : "AWS::StackName" },
                "         --resource EC2Instance ",
-               "         --configsets BootStrapSetup ",
+               "         --configsets BootStrapSetup,CloneOsRepo",
                "         --region ", { "Ref" : "AWS::Region" }, "\n"
             ]]}
           }

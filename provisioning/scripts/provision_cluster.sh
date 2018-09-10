@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# A Cloudformation command to provision node and master openshift cluster machines
+# On tear down volumes remain so use the delete-volumes script to remove available 
+# volumes but unused.
+
 if [[ -z $1 ]] && { echo "No supplied aws keypair"; exit 1 }
 
 AWS_KEYPAIR_NAME=$1
