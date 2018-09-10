@@ -4,8 +4,7 @@
 ##### have been created as a result of create-stack but that stack then gets deleted
 
 
-STATUS=$1
-FLAG=$1
+STATUS=$1 #available, in-use
 
 VOL_ID_ARRAY=($(aws ec2 describe-volumes --filter "Name=status,Values=$STATUS" | jq .Volumes[].VolumeId))
 echo "${VOL_ID_ARRAY[@]}"
