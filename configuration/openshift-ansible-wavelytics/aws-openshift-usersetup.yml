@@ -1,5 +1,5 @@
 ---
-- hosts: master
+- hosts: masters
   gather_facts: no
   become: true
   
@@ -7,7 +7,7 @@ tasks:
 
   - name: OC Login
     shell: oc login -u system:admin
-    register: oc_token
+    register: oc_login_result
 
   - name: Create Admin User
     shell: htpasswd -b /etc/openshift/openshift-passwd admin {{ os_admin_password }}

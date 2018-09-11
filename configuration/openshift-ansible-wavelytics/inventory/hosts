@@ -23,6 +23,6 @@ master-host-name
 master-host-name
 
 [nodes]
-master-host-name openshift_node_labels="{'region':'infra','zone':'east'}" openshift_schedulable=true
-worker1-host-name openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
-worker2-host-name openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+master-host-name openshift_node_labels="{'region':'infra','zone':'west'}" openshift_schedulable=true
+worker1-host-name openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+worker2-host-name openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
