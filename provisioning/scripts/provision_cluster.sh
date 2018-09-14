@@ -4,7 +4,7 @@
 # On tear down volumes remain so use the delete-volumes script to remove available 
 # volumes but unused.
 
-if [[ -z $1 ]] && { echo "No supplied aws keypair"; exit 1 }
+[[ -z $1 ]] && { echo "No supplied aws keypair"; exit 1; }
 
 AWS_KEYPAIR_NAME=$1
 
@@ -15,6 +15,6 @@ aws cloudformation create-stack \
  --parameters \
    ParameterKey=AvailabilityZone,ParameterValue=us-west-1b \
    ParameterKey=KeyName,ParameterValue=$AWS_KEYPAIR_NAME \
- --capabilities=CAPABILITY_IAM
+ --capabilities=CAPABILITY_IAM 
 
 

@@ -16,13 +16,28 @@ openshift_docker_options='--selinux-enabled --insecure-registry 172.30.0.0/16'
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
 openshift_disable_check=disk_availability,docker_storage,memory_availability
 
-[masters]
-master-host-name
+[masters:children]
+tag_Name_openshift_master
 
-[etcd]
-master-host-name
+[etcd:children]
+tag_Name_openshift_master
 
-[nodes]
-master-host-name openshift_node_labels="{'region':'infra','zone':'west'}" openshift_schedulable=true
-worker1-host-name openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
-worker2-host-name openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+[nodes:children]
+tag_Name_openshift_master 
+tag_Name_openshift_worker1
+tag_Name_openshift_worker2
+
+[tag_Name_openshift_master]
+
+[tag_Name_openshift_master:vars]
+openshift_node_labels="{'region': 'primary', 'zone': 'west'}" openshift_schedulable=true
+
+[tag_Name_openshift_worker1]
+
+[tag_Name_openshift_worker1:vars]
+openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+
+[tag_Name_openshift_worker2]
+
+[tag_Name_openshift_worker2:vars]
+openshift_node_labels="{'region': 'primary', 'zone': 'west'}"

@@ -1,7 +1,7 @@
 {
     "AWSTemplateFormatVersion" : "2010-09-09",
   
-    "Description" : "AWS CloudFormation Sample Template EC2InstanceWithSecurityGroupSample: Create an Amazon EC2 instance running the Amazon Linux AMI. The AMI is chosen based on the region in which the stack is run. This example creates an EC2 security group for the instance to give you SSH access. **WARNING** This template creates an Amazon EC2 instance. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description" : "A BootStrap Box to Run Ansible Playbooks for the deployment of an Openshift Cluster",
   
     "Parameters" : {
       "KeyName": {
@@ -175,14 +175,26 @@
         "Metadata" : {
             "AWS::CloudFormation::Init" : {
               "configSets" : {
-                "BootStrapSetup" : [ "AnsibleInstall","UpdateYum","InstallBasePackages" ],
+                "BootStrapSetup" : [ "AnsibleSetup","UpdateYum","InstallBasePackages" ],
                 "CloneOsRepo": [ "CloneRepo" ]
                 },
-                "AnsibleInstall" : {
+                "AnsibleSetup" : {
                     "commands" : {
                         "InstallUsingPip" : {
                             "command" : "pip install ansible==2.2.2.0",
                             "cwd" : "~"
+                        },
+                        "CreateAnsibleDir" : {
+                          "command" : "mkdir /etc/ansible && chmod 755 /etc/ansible",
+                          "cwd" : "~"
+                        },
+                        "PullDynamicAnsibleScript" : {
+                             "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -o ec2.py",
+                             "cwd" : "/etc/ansible"
+                        },
+                        "PullDynamicAnsibleIni" : {
+                             "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini -o ec2.ini",
+                             "cwd" : "/etc/ansible"
                         }
                     }
                 },
@@ -217,6 +229,13 @@
         },
         "Properties" : {
           "InstanceType" : { "Ref" : "InstanceType" },
+          "IamInstanceProfile" : "wavelytics_openshift_admin",
+          "Tags" : [
+            {
+              "Key": "Name",
+              "Value": "openshift-bootstrap"
+            }
+          ],
           "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
           "KeyName" : { "Ref" : "KeyName" },
           "ImageId" : { "Fn::FindInMap" : [ "AWSRegionArch2AMI", { "Ref" : "AWS::Region" },
@@ -229,7 +248,13 @@
                "         --stack ", { "Ref" : "AWS::StackName" },
                "         --resource EC2Instance ",
                "         --configsets BootStrapSetup,CloneOsRepo",
-               "         --region ", { "Ref" : "AWS::Region" }, "\n"
+               "         --region ", { "Ref" : "AWS::Region" }, "\n",
+               "cat  << EOF > /etc/profile.d/ansible_env.sh", "\n",
+               "#!/bin/bash", "\n",
+               "export ANSIBLE_HOSTS=/etc/ansible/ec2.py", "\n",
+               "export EC2_INI_PATH=/etc/ansible/ec2.ini", "\n",
+               "EOF","\n",
+               "chmod 755 /etc/profile.d/ansible_env.sh", "\n"
             ]]}
           }
         }

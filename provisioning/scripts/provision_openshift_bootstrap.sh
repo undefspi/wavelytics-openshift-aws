@@ -6,7 +6,8 @@
 
 ## PARAMETERS
 # AWS_KEYPAIR_NAME - The standard aws keypair you would use to provision and connect to boxes
-# RepoURL - Ok so you dont want to use this repo to use - maybe fork off then ;) - Add this yourself below
+# RepoURL - Ok so you dont want to use this repo to use - maybe fork off then ;) - Add this yourself below 
+# in the parameters section
 
 [[ -z $1 ]] && { echo "No supplied aws keypair"; exit 1; }
 

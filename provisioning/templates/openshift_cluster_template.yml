@@ -87,6 +87,7 @@ Resources:
       Tags:
       - Key: Name
         Value: openshift-worker1
+      IamInstanceProfile : wavelytics_openshift_admin
       InstanceType: t2.medium
       KeyName: !Ref KeyName
       AvailabilityZone: !Ref AvailabilityZone
@@ -104,6 +105,7 @@ Resources:
       Tags:
       - Key: Name
         Value: openshift-worker2
+      IamInstanceProfile : wavelytics_openshift_admin
       InstanceType: t2.medium
       KeyName: !Ref KeyName
       AvailabilityZone: !Ref AvailabilityZone
