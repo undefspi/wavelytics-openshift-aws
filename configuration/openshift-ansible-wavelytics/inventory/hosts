@@ -30,7 +30,8 @@ tag_Name_openshift_worker2
 [tag_Name_openshift_master]
 
 [tag_Name_openshift_master:vars]
-openshift_node_labels="{'region': 'primary', 'zone': 'west'}" openshift_schedulable=true
+openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
+openshift_schedulable=true
 
 [tag_Name_openshift_worker1]
 

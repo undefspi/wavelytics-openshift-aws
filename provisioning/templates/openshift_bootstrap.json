@@ -14,6 +14,11 @@
          "Type": "String",
          "Default" : "https://github.com/undefspi/wavelytics-openshift-aws.git"
       },
+      "InvContext" : {
+        "Description" : "The Inventory Path specifying custom host files and symlink of dynamic ansible scripts",
+        "Type": "String",
+        "Default" : "configuration/openshift-ansible-wavelytics/inventory"
+      },
       "InstanceType" : {
         "Description" : "WebServer EC2 instance type",
         "Type" : "String",
@@ -192,6 +197,9 @@
                              "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -o ec2.py",
                              "cwd" : "/etc/ansible"
                         },
+                        "MakeDynamicExecutable" : {
+                             "command" : "chmod 755 /etc/ansible/ec2.py"  
+                        },
                         "PullDynamicAnsibleIni" : {
                              "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini -o ec2.ini",
                              "cwd" : "/etc/ansible"
@@ -253,8 +261,11 @@
                "#!/bin/bash", "\n",
                "export ANSIBLE_HOSTS=/etc/ansible/ec2.py", "\n",
                "export EC2_INI_PATH=/etc/ansible/ec2.ini", "\n",
+               "cd /Github && export REPO_PATH=`pwd`","\n",
                "EOF","\n",
-               "chmod 755 /etc/profile.d/ansible_env.sh", "\n"
+               "chmod 755 /etc/profile.d/playbook_env.sh", "\n",
+               "ln -s `echo \"$EC2_INI_PATH\"` `echo \"$REPO_PATH/", { "REF": "InvContext" }, "/ec2.ini\"`", "\n",
+               "ln - s `echo \"$ANSIBLE_HOSTS\"` `echo \"$REPO_PATH/", { "REF": "InvContext" },"/ec2.py\"`", "\n"
             ]]}
           }
         }
