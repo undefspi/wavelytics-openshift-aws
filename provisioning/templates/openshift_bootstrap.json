@@ -19,6 +19,11 @@
         "Type": "String",
         "Default" : "configuration/openshift-ansible-wavelytics/inventory"
       },
+      "WorkingOSAnsibleBranch" : {
+        "Description" : "The inventory path specifying custom host files and symlink of dynamic ansible scripts",
+        "Type": "String",
+        "Default" : "release-3.6-hotix"
+      },
       "InstanceType" : {
         "Description" : "WebServer EC2 instance type",
         "Type" : "String",
@@ -184,26 +189,27 @@
                 "CloneOsRepo": [ "CloneRepo" ]
                 },
                 "AnsibleSetup" : {
-                    "commands" : {
-                        "InstallUsingPip" : {
-                            "command" : "pip install ansible==2.2.2.0",
-                            "cwd" : "~"
-                        },
-                        "CreateAnsibleDir" : {
-                          "command" : "mkdir /etc/ansible && chmod 755 /etc/ansible",
+                  "commands" : {
+                      "InstallUsingPip" : {
+                          "command" : "pip install ansible==2.2.2.0",
                           "cwd" : "~"
-                        },
-                        "PullDynamicAnsibleScript" : {
-                             "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -o ec2.py",
-                             "cwd" : "/etc/ansible"
-                        },
-                        "MakeDynamicExecutable" : {
-                             "command" : "chmod 755 /etc/ansible/ec2.py"  
-                        },
-                        "PullDynamicAnsibleIni" : {
-                             "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini -o ec2.ini",
-                             "cwd" : "/etc/ansible"
-                        }
+                      },
+                      "CreateAnsibleDir" : {
+                        "command" : "mkdir /etc/ansible",
+                        "cwd" : "~"
+                      },
+                      "PullDynamicAnsibleScript" : {
+                            "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.py -o ec2.py",
+                            "cwd" : "/etc/ansible"
+                      },
+                      "PullDynamicAnsibleIni" : {
+                            "command" : "curl https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/ec2.ini -o ec2.ini",
+                            "cwd" : "/etc/ansible"
+                      },
+                      "MakeDynamicExecutable" : {
+                        "command" : "chmod 755 -R /etc/ansible",
+                        "cwd" : "~"
+                      }
                     }
                 },
                 "UpdateYum" : {
@@ -257,15 +263,21 @@
                "         --resource EC2Instance ",
                "         --configsets BootStrapSetup,CloneOsRepo",
                "         --region ", { "Ref" : "AWS::Region" }, "\n",
+               "export ANSIBLE_HOSTS=/etc/ansible/ec2.py", "\n",
+               "export EC2_INI_PATH=/etc/ansible/ec2.ini", "\n",
+               "export REPO_PATH=`echo /Github/*`","\n",
                "cat  << EOF > /etc/profile.d/ansible_env.sh", "\n",
                "#!/bin/bash", "\n",
                "export ANSIBLE_HOSTS=/etc/ansible/ec2.py", "\n",
                "export EC2_INI_PATH=/etc/ansible/ec2.ini", "\n",
-               "cd /Github && export REPO_PATH=`pwd`","\n",
+               "export REPO_PATH=`echo /Github/*`","\n",
                "EOF","\n",
-               "chmod 755 /etc/profile.d/playbook_env.sh", "\n",
-               "ln -s `echo \"$EC2_INI_PATH\"` `echo \"$REPO_PATH/", { "REF": "InvContext" }, "/ec2.ini\"`", "\n",
-               "ln - s `echo \"$ANSIBLE_HOSTS\"` `echo \"$REPO_PATH/", { "REF": "InvContext" },"/ec2.py\"`", "\n"
+               "chmod 755 /etc/profile.d/ansible_env.sh", "\n",
+               "cd $REPO_PATH/configuration/openshift-ansible","\n",
+               "ls > /tmp/repopath.txt", "\n",
+               "echo \"", { "Ref": "InvContext" }, "\" > /tmp/context.txt", "\n", 
+               "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
+               "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n"
             ]]}
           }
         }
