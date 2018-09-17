@@ -274,6 +274,7 @@
                "EOF","\n",
                "chmod 755 /etc/profile.d/ansible_env.sh", "\n",
                "cd $REPO_PATH/configuration/openshift-ansible","\n",
+               "git checkout release-3.6-hotfix", "\n", 
                "ls > /tmp/repopath.txt", "\n",
                "echo \"", { "Ref": "InvContext" }, "\" > /tmp/context.txt", "\n", 
                "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
