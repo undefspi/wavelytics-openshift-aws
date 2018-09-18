@@ -19,7 +19,7 @@
         "Type": "String",
         "Default" : "configuration/openshift-ansible-wavelytics/inventory"
       },
-      "WorkingOSAnsibleBranch" : {
+      "Branch" : {
         "Description" : "The inventory path specifying custom host files and symlink of dynamic ansible scripts",
         "Type": "String",
         "Default" : "release-3.6-hotix"
@@ -266,20 +266,21 @@
                "export ANSIBLE_HOSTS=/etc/ansible/ec2.py", "\n",
                "export EC2_INI_PATH=/etc/ansible/ec2.ini", "\n",
                "export REPO_PATH=`echo /Github/*`","\n",
+               "export INV_CONTEXT_PATH=", { "Ref": "InvContext" }, "\n",
                "cat  << EOF > /etc/profile.d/ansible_env.sh", "\n",
                "#!/bin/bash", "\n",
                "export ANSIBLE_HOSTS=/etc/ansible/ec2.py", "\n",
                "export EC2_INI_PATH=/etc/ansible/ec2.ini", "\n",
                "export REPO_PATH=`echo /Github/*`","\n",
+               "export INV_CONTEXT_PATH=", { "Ref": "InvContext" }, "\n",
                "EOF","\n",
                "chmod 755 /etc/profile.d/ansible_env.sh", "\n",
                "cd $REPO_PATH/configuration/openshift-ansible","\n",
-               "git checkout release-3.6-hotfix", "\n", 
-               "ls > /tmp/repopath.txt", "\n",
-               "echo \"", { "Ref": "InvContext" }, "\" > /tmp/context.txt", "\n", 
+               "git checkout ", { "Ref": "Branch" }, "\n",
                "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
-               "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n"
-            ]]}
+               "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n",
+               "ln -s $REPO_PATH/ansible.cfg /etc/ansible/ansible.cfg", "\n"
+             ]]}
           }
         }
       },
