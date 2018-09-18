@@ -5,20 +5,34 @@
 ## if you just fork it it should be fine
 
 
-LOGPATH=/var/log/wavelytics
+ERROR_LOGPATH=/var/log/wavelytics/wavelyticserror.log
 PREAMBLE_PLAYBOOK=aws-openshift-node-preamble.yml
 OPENSHIFT_PLAYBOOK=playbook/byo/config.yml
 
 mkdir $LOGPATH
 
+###  SSH AGENT ####
+[[ -f ~/.ssh/$KEY_NAME ]] || { 
+    echo "ERROR: You require you keypair pem file.  Place pem file in ~/.ssh/"; 
+    echo "Failed to load Pem keypair > $ERROR_LOGPATH"
+    exit 1; 
+}
+
+eval `ssh-agent`
+ssh-add ~/.ssh/$PEM_FILE
+
+### Run in node setups
 echo "Running in preamble playbooks"
 cd $REPO_PATH/$INV_CONTEXT_PATH
 ansible-playbook -i inventory $PREAMBLE_PLAYBOOK
 
-[[ $? -eq 0 ]] || { echo "Preamble Playbook Failed > $LOGPATH/wavelyticserror.log"}
+## Provision Cluster
+[[ $? -eq 0 ]] || { echo "Preamble Playbook Failed > $ERROR_LOGPATH"}
 echo "############### Running in Cluster ##############"
 cd $REPO_PATH/configuration/openshift-ansible
 ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $OPENSHIFT_PLAYBOOK
+
+
 
 #symlink the hosts file in configuration/openshift-ansible-wavelytics/inventory/hosts to openshift-ansible/inventory
 #Run the playbook aws-openshift-node-preamble
