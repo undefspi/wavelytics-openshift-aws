@@ -27,7 +27,7 @@
       "Branch" : {
         "Description" : "The inventory path specifying custom host files and symlink of dynamic ansible scripts",
         "Type": "String",
-        "Default" : "release-3.6-hotix"
+        "Default" : "release-3.6-hotfix"
       },
       "InstanceType" : {
         "Description" : "WebServer EC2 instance type",
@@ -281,7 +281,7 @@
                "EOF","\n",
                "chmod 755 /etc/profile.d/ansible_env.sh", "\n",
                "cd $REPO_PATH/configuration/openshift-ansible","\n",
-               "git checkout release-3.6-hotix", "\n",
+               "git checkout ", { "Ref": "Branch" }, "\n",
                "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
                "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n",
                "ln -s $REPO_PATH/ansible.cfg /etc/ansible/ansible.cfg", "\n"
