@@ -7,6 +7,7 @@
 
 ERROR_LOGPATH=/var/log/wavelytics/wavelyticserror.log
 PREAMBLE_PLAYBOOK=aws-openshift-node-preamble.yml
+USERSETUP_PLAYBOOK=aws-openshift-usersetup.yml
 OPENSHIFT_PLAYBOOK=playbook/byo/config.yml
 
 mkdir $LOGPATH
@@ -23,7 +24,7 @@ ssh-add ~/.ssh/$PEM_FILE
 
 ### Run in node setups
 echo "Running in preamble playbooks"
-cd $REPO_PATH/$INV_CONTEXT_PATH
+cd $REPO_PATH/$INV_CONTEXT_PATH/..
 ansible-playbook -i inventory $PREAMBLE_PLAYBOOK
 
 ## Provision Cluster
@@ -32,10 +33,10 @@ echo "############### Running in Cluster ##############"
 cd $REPO_PATH/configuration/openshift-ansible
 ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $OPENSHIFT_PLAYBOOK
 
+[[ $? -eq 0 ]] || { echo "Cluster Provisioning Failed" > $ERROR_LOGPATH"}
+echo "############### Running in Cluster ##############"
+cd $REPO_PATH/$INV_CONTEXT_PATH/..
+ansible-playbook -i inventory $USERSETUP_PLAYBOOK
 
-
-#symlink the hosts file in configuration/openshift-ansible-wavelytics/inventory/hosts to openshift-ansible/inventory
-#Run the playbook aws-openshift-node-preamble
-#Run the playbook openshift-ansible/playbooks/byo/config.yml
-#Run the playbook aws-openshift-usersetup.yml
+[[ $? -eq 0 ]] || { echo "User Setup Failed" > $ERROR_LOGPATH"}
 
