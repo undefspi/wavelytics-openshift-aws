@@ -2,11 +2,13 @@
 
 # A Cloudformation command to provision node and master openshift cluster machines
 # On tear down volumes remain so use the delete-volumes script to remove available 
-# volumes but unused.
+# volumes that are unused
 
 [[ -z $1 ]] && { echo "No supplied aws keypair"; exit 1; }
+[[ -z $2 ]] && { echo "No supplied IAM Role"; exit 1; }
 
 AWS_KEYPAIR_NAME=$1
+AWS_IAMROLE_NAME=$2
 
 aws cloudformation create-stack \
  --region "us-west-1" \
@@ -15,6 +17,7 @@ aws cloudformation create-stack \
  --parameters \
    ParameterKey=AvailabilityZone,ParameterValue=us-west-1b \
    ParameterKey=KeyName,ParameterValue=$AWS_KEYPAIR_NAME \
+   ParameterKey=IAMRoleName,ParameterValue=$AWS_IAMROLE_NAME \
  --capabilities=CAPABILITY_IAM 
 
 

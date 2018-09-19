@@ -9,6 +9,11 @@
         "Type": "AWS::EC2::KeyPair::KeyName",
         "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
       },
+      "IAMRoleName" : {
+        "Description" : "For Boxes to be able to natively query the AWS Cli this needs to included",
+        "Type": "String",
+        "ConstraintDescription" : "must be the name of an existing IAM Role name."
+      },
       "RepoURL" : {
          "Description" : "The URL of the Repo to Clone down once provisioned (https)",
          "Type": "String",
@@ -243,7 +248,7 @@
         },
         "Properties" : {
           "InstanceType" : { "Ref" : "InstanceType" },
-          "IamInstanceProfile" : "wavelytics_openshift_admin",
+          "IamInstanceProfile" : { "Ref": "IAMRoleName" },
           "Tags" : [
             {
               "Key": "Name",
@@ -276,7 +281,7 @@
                "EOF","\n",
                "chmod 755 /etc/profile.d/ansible_env.sh", "\n",
                "cd $REPO_PATH/configuration/openshift-ansible","\n",
-               "git checkout ", { "Ref": "Branch" }, "\n",
+               "git checkout release-3.6-hotix", "\n",
                "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
                "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n",
                "ln -s $REPO_PATH/ansible.cfg /etc/ansible/ansible.cfg", "\n"

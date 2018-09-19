@@ -5,22 +5,24 @@
 ## if you just fork it it should be fine
 
 
-ERROR_LOGPATH=/var/log/wavelytics/wavelyticserror.log
+ERROR_LOGPATH_DIR=/tmp/wavelytics
+ERROR_LOGPATH_FILEPATH=$ERROR_LOGPATH_DIR/wavelytics.log
 PREAMBLE_PLAYBOOK=aws-openshift-node-preamble.yml
-USERSETUP_PLAYBOOK=aws-openshift-usersetup.yml
 OPENSHIFT_PLAYBOOK=playbook/byo/config.yml
 
-mkdir $LOGPATH
+[[ -d $ERROR_LOGPATH_DIR ]] || mkdir $ERROR_LOGPATH_DIR
+
+PEM_FILE_PATH=$1
 
 ###  SSH AGENT ####
-[[ -f ~/.ssh/$KEY_NAME ]] || { 
-    echo "ERROR: You require you keypair pem file.  Place pem file in ~/.ssh/"; 
+[[ -f $PEM_FILE_PATH ]] || {
+    echo "ERROR: You require you keypair pem file.  Place pem file in ~/.ssh/";
     echo "Failed to load Pem keypair > $ERROR_LOGPATH"
-    exit 1; 
+    exit 1;
 }
 
 eval `ssh-agent`
-ssh-add ~/.ssh/$PEM_FILE
+ssh-add $PEM_FILE_PATH
 
 ### Run in node setups
 echo "Running in preamble playbooks"
