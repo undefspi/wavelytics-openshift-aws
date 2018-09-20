@@ -1,8 +1,15 @@
 ---
+
+  ### This is just to get you going but it is HIGHLY recommended to change these passwords
+  ### and place them in an ansible vualt instead.   
+
 - hosts: masters
   gather_facts: no
   become: true
-  
+  vars:
+    os_admin_password: changemeadmin
+    os_developer_password: changemedev
+    
 tasks:
 
   - name: OC Login

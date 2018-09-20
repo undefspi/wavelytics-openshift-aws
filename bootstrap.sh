@@ -21,12 +21,13 @@ PEM_FILE_PATH=$1
     exit 1;
 }
 
+###  So ssh sessions to openshift cluster hosts can happend
 eval `ssh-agent`
 ssh-add $PEM_FILE_PATH
 
 ### Run in node setups
 echo "Running in preamble playbooks"
-cd $REPO_PATH/$INV_CONTEXT_PATH/..
+cd $REPO_PATH/$INV_CONTEXT_PATH/../
 ansible-playbook -i inventory $PREAMBLE_PLAYBOOK
 
 ## Provision Cluster
@@ -37,7 +38,7 @@ ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $OPENSHIFT_PLAYBOOK
 
 [[ $? -eq 0 ]] || { echo "Cluster Provisioning Failed" > $ERROR_LOGPATH"}
 echo "############### Running in Cluster ##############"
-cd $REPO_PATH/$INV_CONTEXT_PATH/..
+cd $REPO_PATH/$INV_CONTEXT_PATH/../
 ansible-playbook -i inventory $USERSETUP_PLAYBOOK
 
 [[ $? -eq 0 ]] || { echo "User Setup Failed" > $ERROR_LOGPATH"}

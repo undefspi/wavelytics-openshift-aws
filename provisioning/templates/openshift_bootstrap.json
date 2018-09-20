@@ -280,11 +280,13 @@
                "export INV_CONTEXT_PATH=", { "Ref": "InvContext" }, "\n",
                "EOF","\n",
                "chmod 755 /etc/profile.d/ansible_env.sh", "\n",
-               "cd $REPO_PATH/configuration/openshift-ansible","\n",
-               "git checkout ", { "Ref": "Branch" }, "\n",
+               "chmod 755 $REPO_PATH/bootstrap.sh", "\n",
+               "chmod 755 $ANSIBLE_HOSTS", "\n",
                "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
                "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n",
-               "ln -s $REPO_PATH/ansible.cfg /etc/ansible/ansible.cfg", "\n"
+               "ln -s $REPO_PATH/ansible.cfg /etc/ansible/ansible.cfg", "\n",
+               "cd $REPO_PATH/configuration/openshift-ansible","\n",
+               "git checkout ", { "Ref": "Branch" }, "\n"
              ]]}
           }
         }
