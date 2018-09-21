@@ -40,9 +40,9 @@ and ideally place them in your own ansible vault etc
 ### Run the deployment script
 1. Log onto your newly provisioned bootstrap server using your keypair pem file for ssh connection
 1. cd /Github/
-1. ./bootstrap.sh
+1. ./bootstrap.sh ~/.ssh/[PEM FILE]
 
-This takes and age to setup so go make a coffee/tea/cake then come back in half an hour.  
+This takes an age to setup so go make a coffee/tea/cake then come back in half an hour.  
 You should now be able to log onto your cluster via http://[masternode]:8443
 
 ## Login to openshift

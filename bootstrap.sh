@@ -14,6 +14,8 @@ OPENSHIFT_PLAYBOOK=playbook/byo/config.yml
 
 PEM_FILE_PATH=$1
 
+[[ -z $PEM_FILE_PATH ]] && { echo "Please provide pem file path"; exit 1;}
+
 ###  SSH AGENT ####
 [[ -f $PEM_FILE_PATH ]] || {
     echo "ERROR: You require you keypair pem file.  Place pem file in ~/.ssh/";
