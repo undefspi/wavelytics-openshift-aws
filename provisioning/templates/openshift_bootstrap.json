@@ -228,7 +228,8 @@
                 "InstallBasePackages" : {
                     "packages" : {
                       "yum" : {
-                         "git" : []
+                         "git" : [],
+                         "jq" : []
                       }
                     }
                 },
