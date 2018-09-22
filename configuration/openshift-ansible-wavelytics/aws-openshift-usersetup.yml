@@ -10,26 +10,26 @@
     os_admin_password: changemeadmin
     os_developer_password: changemedev
     
-tasks:
+  tasks:
 
-  - name: OC Login
-    shell: oc login -u system:admin
-    register: oc_login_result
+    - name: OC Login
+      shell: oc login -u system:admin
+      register: oc_login_result
 
-  - name: Create Admin User
-    shell: htpasswd -b /etc/openshift/openshift-passwd admin {{ os_admin_password }}
-  
-  - name: Apply Administration Role to Admin User
-    shell: oc adm policy add-cluster-role-to-user cluster-admin admin
+    - name: Create Admin User
+      shell: htpasswd -b /etc/openshift/openshift-passwd admin {{ os_admin_password }}
+    
+    - name: Apply Administration Role to Admin User
+      shell: oc adm policy add-cluster-role-to-user cluster-admin admin
 
-  - name: Create Developer User
-    shell: htpasswd -b /etc/openshift/openshift-passwd developer {{ os_developer_password }}
+    - name: Create Developer User
+      shell: htpasswd -b /etc/openshift/openshift-passwd developer {{ os_developer_password }}
 
-  - name: Create user developer in OC
-    shell: oc create user developer
+    - name: Create user developer in OC
+      shell: oc create user developer
 
-  - name: Create Identity in OC
-    shell: oc create identity htpasswd_auth:developer
+    - name: Create Identity in OC
+      shell: oc create identity htpasswd_auth:developer
 
-  - name: Map user wth identity
-    shell: oc create useridentitymapping htpasswd_auth:developer developer
+    - name: Map user wth identity
+      shell: oc create useridentitymapping htpasswd_auth:developer developer
