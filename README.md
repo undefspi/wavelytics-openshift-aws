@@ -34,7 +34,7 @@ The passwords for the generated accounts are in the aws-openshift-usersetup.yml 
 and ideally place them in your own ansible vault etc
 
 ### Initial Setup
-1. scp the AWS KeyPair PEM file your specified in the provision_cluster.sh command to the bootstrap box into the ec2_user .ssh folder
+1. scp the AWS KeyPair PEM file you specified in the provision_cluster.sh command to the bootstrap box into the ec2_user .ssh folder
 1. Change the passwords located in aws-openshift-usersetup.yml (Recommended)
 
 ### Run the deployment script

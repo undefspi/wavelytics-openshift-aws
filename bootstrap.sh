@@ -6,15 +6,15 @@
 
 
 ERROR_LOGPATH_DIR=/tmp/wavelytics
-ERROR_LOGPATH_FILEPATH=$ERROR_LOGPATH_DIR/wavelytics.log
+ERROR_FILEPATH=$ERROR_LOGPATH_DIR/wavelytics.log
 PREAMBLE_PLAYBOOK=aws-openshift-node-preamble.yml
-OPENSHIFT_PLAYBOOK=playbook/byo/config.yml
+OPENSHIFT_PLAYBOOK=playbooks/byo/config.yml
+USERSETUP_PLAYBOOK=aws-openshift-usersetup.yml
+
 
 [[ -d $ERROR_LOGPATH_DIR ]] || mkdir $ERROR_LOGPATH_DIR
 
 PEM_FILE_PATH=$1
-
-[[ -z $PEM_FILE_PATH ]] && { echo "Please provide pem file path"; exit 1;}
 
 ###  SSH AGENT ####
 [[ -f $PEM_FILE_PATH ]] || {
@@ -33,15 +33,23 @@ cd $REPO_PATH/$INV_CONTEXT_PATH/../
 ansible-playbook -i inventory $PREAMBLE_PLAYBOOK
 
 ## Provision Cluster
-[[ $? -eq 0 ]] || { echo "Preamble Playbook Failed > $ERROR_LOGPATH"}
-echo "############### Running in Cluster ##############"
-cd $REPO_PATH/configuration/openshift-ansible
-ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $OPENSHIFT_PLAYBOOK
+[[ $? -eq 0 ]] || { echo "Preamble Playbook Failed" > $ERROR_FILEPATH; }
+echo "Do you want to run cluster playbook? This will take about half an hour (y/n):"
+read RUN_CLUSTER
 
-[[ $? -eq 0 ]] || { echo "Cluster Provisioning Failed" > $ERROR_LOGPATH"}
-echo "############### Running in Cluster ##############"
+[[ 'y' == $RUN_CLUSTER ]] && {
+	echo "############### Running in Cluster ##############";
+	cd $REPO_PATH/configuration/openshift-ansible;
+	ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $OPENSHIFT_PLAYBOOK;
+}
+
+[[ $? -eq 0 ]] || { echo "Cluster Provisioning Failed" > $ERROR_FILEPATH; }
+echo "############### Setting up initial Users  ##############"
 cd $REPO_PATH/$INV_CONTEXT_PATH/../
 ansible-playbook -i inventory $USERSETUP_PLAYBOOK
 
-[[ $? -eq 0 ]] || { echo "User Setup Failed" > $ERROR_LOGPATH"}
+[[ $? -eq 0 ]] || { echo "User Setup Failed" > $ERROR_FILEPATH; }
+MASTER_URL=$(aws ec2 describe-instances --filter --region us-west-1 Name=tag-value,Values=openshift-master | jq .Reservations[].Instances[].PublicDnsName)
 
+echo "Congratulations your cluster is all setup"
+echo "your openshift is at https://$MASTER_URL:8443"
