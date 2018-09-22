@@ -8,7 +8,7 @@
 ERROR_LOGPATH_DIR=/tmp/wavelytics
 ERROR_FILEPATH=$ERROR_LOGPATH_DIR/wavelytics.log
 PREAMBLE_PLAYBOOK=aws-openshift-node-preamble.yml
-OPENSHIFT_PLAYBOOK=playbooks/byo/config.yml
+OPENSHIFT_PLAYBOOK=playbooks/byo/openshift_facts.yml
 USERSETUP_PLAYBOOK=aws-openshift-usersetup.yml
 
 

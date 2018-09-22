@@ -27,7 +27,7 @@
       "Branch" : {
         "Description" : "The inventory path specifying custom host files and symlink of dynamic ansible scripts",
         "Type": "String",
-        "Default" : "release-3.6-hotfix"
+        "Default" : "release-3.9"
       },
       "InstanceType" : {
         "Description" : "WebServer EC2 instance type",
@@ -196,7 +196,7 @@
                 "AnsibleSetup" : {
                   "commands" : {
                       "InstallUsingPip" : {
-                          "command" : "pip install ansible==2.2.2.0",
+                          "command" : "pip install ansible==2.4.3.0",
                           "cwd" : "~"
                       },
                       "CreateAnsibleDir" : {
