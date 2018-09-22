@@ -2,9 +2,7 @@
 A series of playbooks and scripts to provision an AWS Openshift Cluster.
 
 Learning on openshift is really simple and recommended with minishift local to your laptop. 
-Using Openshift Online is also a good choice but are not publically accessible easily in the
-former instance and lack grunt in both situations 9/10.  What would be good is if you could bring up
-and control your own cluster and potentially not run out of grunt - albeit at a charge from AWS.
+Using Openshift Online is also a good choice.  Unfortunately, minishift is not publically accessible easily and openshift can lack grunt.  What would be good is if you could bring up and control your own cluster and potentially not run out of grunt - albeit, at a charge from AWS.
 
 This is provisioning scripts for CloudFormation to set up all the boxes + a submodule of the openshift-ansible repo provided by the origin project https://github.com/openshift/openshift-ansible 
 
