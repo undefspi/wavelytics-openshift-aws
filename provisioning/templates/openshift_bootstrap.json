@@ -287,6 +287,7 @@
                "chmod 755 $ANSIBLE_HOSTS", "\n",
                "ln -s $EC2_INI_PATH $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.ini", "\n",
                "ln -s $ANSIBLE_HOSTS $REPO_PATH/", { "Ref": "InvContext" }, "/ec2.py", "\n",
+               "cd $REPO_PATH && git checkout release-3.6", "\n",
                "cd $REPO_PATH/configuration/openshift-ansible","\n",
                "git checkout ", { "Ref": "Branch" }, "\n"
              ]]}
