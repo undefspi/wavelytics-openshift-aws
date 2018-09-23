@@ -17,13 +17,13 @@
       register: oc_login_result
 
     - name: Create Admin User
-      shell: htpasswd -b /etc/openshift/openshift-passwd admin {{ os_admin_password }}
+      shell: htpasswd -b /etc/origin/master/htpasswd admin {{ os_admin_password }}
     
     - name: Apply Administration Role to Admin User
       shell: oc adm policy add-cluster-role-to-user cluster-admin admin
 
     - name: Create Developer User
-      shell: htpasswd -b /etc/openshift/openshift-passwd developer {{ os_developer_password }}
+      shell: htpasswd -b /etc/origin/master/htpasswd developer {{ os_developer_password }}
 
     - name: Create user developer in OC
       shell: oc create user developer
