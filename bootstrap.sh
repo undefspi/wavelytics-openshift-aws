@@ -7,8 +7,8 @@
 
 ERROR_LOGPATH_DIR=/tmp/wavelytics
 ERROR_FILEPATH=$ERROR_LOGPATH_DIR/wavelytics.log
-PREAMBLE_PLAYBOOK=playbooks/prerequisite.yml
-OPENSHIFT_PLAYBOOK=playbooks/deploy_cluster.yml
+PREAMBLE_PLAYBOOK=prerequisites.yml
+OPENSHIFT_PLAYBOOK=deploy_cluster.yml
 USERSETUP_PLAYBOOK=aws-openshift-usersetup.yml
 
 
@@ -29,7 +29,7 @@ ssh-add $PEM_FILE_PATH
 
 ### Run in node setups
 echo "Running in preamble playbooks"
-cd $REPO_PATH/configuration/openshift-ansible;
+cd $REPO_PATH/configuration/openshift-ansible/playbooks;
 ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $PREAMBLE_PLAYBOOK 
 
 ## Provision Cluster
@@ -39,7 +39,7 @@ read RUN_CLUSTER
 
 [[ 'y' == $RUN_CLUSTER ]] && {
 	echo "############### Running in Cluster ##############";
-	cd $REPO_PATH/configuration/openshift-ansible;
+	cd $REPO_PATH/configuration/openshift-ansible/playbooks;
 	ansible-playbook -i $REPO_PATH/$INV_CONTEXT_PATH $OPENSHIFT_PLAYBOOK -vvv;
 }
 

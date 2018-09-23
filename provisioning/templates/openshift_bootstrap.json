@@ -27,7 +27,7 @@
       "Branch" : {
         "Description" : "The inventory path specifying custom host files and symlink of dynamic ansible scripts",
         "Type": "String",
-        "Default" : "release-3.9"
+        "Default" : "release-3.10"
       },
       "InstanceType" : {
         "Description" : "WebServer EC2 instance type",
